@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const fs = require('fs/promises');
 const dbJSON = path.join(__dirname, 'db.json');
+const path = require('path');
 
 
 // get request for fetching the api notes route 
