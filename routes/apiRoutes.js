@@ -1,6 +1,7 @@
 // const path = require('path');
 const router = require('express').Router();
 const fs = require('fs/promises');
+// the user id
 const { v4: uuidv4 } = require('uuid');
 const dbPath = "db/db.json"
 
@@ -27,7 +28,9 @@ router.post('/notes', async (req, res) => {
             text: req.body.text,
             title: req.body.title
         };
+        // pushing the user new notes 
         notes.push(userNewNotes);
+        // write the new note in the file by stringify the user notes. 
         await fs.writeFile(dbPath, JSON.stringify(notes));
         res.json(userNewNotes);
     } catch (err) {
@@ -37,8 +40,23 @@ router.post('/notes', async (req, res) => {
     }
 });
 
+// delete request for the user to delete one of there notes. 
+router.delete('/notes/:id', async (req, res) => {
+    const noteId = req.params.id;
+    try {
+        const deleteUserNotes = notes.filter(notes => notes.id !== noteId);
 
-router.
+        if (deleteUserNotes.length < notes.length) {
+            notes = deleteUserNotes;
+            await fs.writeFile(dbPath, JSON.stringify(notes));
+        } else {
+            res.status(404).json({message: 'cant delete'});
+        }
+    } catch (err) {
+        console.error('There a ERROR on deleting your notes!');
+        res.status(500).send('Check your SERVER!');
+    }
+});
 
 
 
