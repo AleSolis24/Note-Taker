@@ -1,41 +1,46 @@
-const path = require('path');
+// const path = require('path');
 const router = require('express').Router();
 const fs = require('fs/promises');
+const { v4: uuidv4 } = require('uuid');
+const dbPath = "db/db.json"
 
-const dbJSON = path.join(__dirname, 'db.json');
-
-
+let notes = [];
 
 // get request for fetching the api notes route 
-router.get('/api/notes', async (req, res) => {
+router.get('/notes', async (req, res) => {
     try {
-        const data = await fs.readFile(dbJSON,'utf8');
-        const notes = JSON.parse(data);
-        res.json(notes); 
+        
+        const data = await fs.readFile(dbPath, 'utf8');
+        const notes = data ? JSON.parse(data) : [];
+        res.json(notes);
     } catch (err) {
-        console.error('There a error with your notes!!', err);
+        console.error('There is an error with your notes!!', err);
         res.status(500).send('Server Error!!');
     }
-})
+});
 
 // post request for the user to add a new note in the request body. 
-router.post('/api/notes', async (req, res)=> {
+router.post('/notes', async (req, res) => {
     try {
-        const data = await fs.readFile(dbJSON, 'utf8');
         const userNewNotes = {
-            id: Math.floor(math.random() * 1000),
+            id: uuidv4(),
             text: req.body.text,
             title: req.body.title
         };
-       note.push(userNewNotes);
-       await fs.writeFile(dbJSON, JSON.stringify(data));
-       res.json(userNewNotes);
+        notes.push(userNewNotes);
+        await fs.writeFile(dbPath, JSON.stringify(notes));
+        res.json(userNewNotes);
     } catch (err) {
         console.error('There a Error!');
-        // if there is a error send the user a 500 error with a provided message for error
+        // if there is an error send the user a 500 error with a provided message for error
         res.status(500).send('There a server error!!');
     }
-})
+});
+
+
+router.
+
+
 
 module.exports = router; 
 
