@@ -5,6 +5,7 @@ const fs = require('fs/promises');
 const { v4: uuidv4 } = require('uuid');
 const dbPath = "db/db.json"
 
+// this will allow the user to input there notes 
 let notes = [];
 
 // get request for fetching the api notes route 
@@ -24,7 +25,7 @@ router.get('/notes', async (req, res) => {
 router.post('/notes', async (req, res) => {
     try {
         const userNewNotes = {
-            id: uuidv4(),
+            id: uuidv4(), // getting the unique id using "uuid"
             text: req.body.text,
             title: req.body.title
         };
@@ -50,9 +51,12 @@ router.delete('/notes/:id', async (req, res) => {
             notes = deleteUserNotes;
             await fs.writeFile(dbPath, JSON.stringify(notes));
         } else {
+            // this will let me know if there is a error on deleting my note 
             res.status(404).json({message: 'cant delete'});
         }
     } catch (err) {
+        // this will let me know if there is a error on deleting my notes 
+        // if there is a error with my server trying to delete my note I will get a 500 status error 
         console.error('There a ERROR on deleting your notes!');
         res.status(500).send('Check your SERVER!');
     }
